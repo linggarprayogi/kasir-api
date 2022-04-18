@@ -1,0 +1,17 @@
+version: "1"
+
+services:
+  app:
+    image: kasir-api-img
+    container_name: app-kasir	
+    depends_on:
+     - postgresdb
+    
+  postgresdb:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=DB_KASIR_KITA
