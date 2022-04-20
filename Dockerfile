@@ -1,5 +1,13 @@
-FROM openjdk:11.0-jre-slim
+# syntax=docker/dockerfile:1
 
-COPY target/kasir-api-0.0.1-SNAPSHOT.jar /app/kasir-api-0.0.1-SNAPSHOT.jar
+FROM openjdk:11.0.8
 
-CMD ["java", "-jar" , "/app/kasir-api-0.0.1-SNAPSHOT.jar"]
+WORKDIR /app
+
+COPY .mvn/ .mvn
+COPY mvnw pom.xml ./
+RUN ./mvnw dependency:go-offline
+
+COPY src ./src
+
+CMD ["./mvnw", "spring-boot:run"]
