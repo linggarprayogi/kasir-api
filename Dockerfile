@@ -19,3 +19,4 @@ COPY target/kasir-api-*.jar /app/kasir-api-*.jar
 EXPOSE 9191
 
 CMD ["java", "-jar" , "/app/kasir-api-*.jar"]
+
