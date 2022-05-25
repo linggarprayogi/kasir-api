@@ -11,11 +11,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.as.kasirapi.model.ResponseModel;
 import com.as.kasirapi.model.transaction.TransactionPenjualan;
 import com.as.kasirapi.repository.TransactionRepository;
+import com.as.kasirapi.service.TransactionService;
 import com.as.kasirapi.util.JwtTokenUtil;
 
 @Controller
@@ -28,6 +30,9 @@ public class TransactionController {
 
 	@Autowired
 	TransactionRepository transactionRepository;
+
+	@Autowired
+	TransactionService    transactionService;
 
 	@GetMapping("/history")
 	public ResponseEntity<?> getHistoryTransaction(HttpServletRequest request) {
@@ -50,8 +55,9 @@ public class TransactionController {
 		}
 	}
 
-	@GetMapping("/process")
-	public ResponseEntity<?> getProcessTransaction(HttpServletRequest request) {
+	@PostMapping("/process")
+	public ResponseEntity<?> processTransaction(HttpServletRequest request,
+			List<TransactionPenjualan> transactionPenjualan) {
 		try {
 			List<TransactionPenjualan> respons            = new ArrayList<TransactionPenjualan>();
 			final String               requestTokenHeader = request.getHeader("Authorization");
@@ -61,7 +67,7 @@ public class TransactionController {
 				jwtToken = requestTokenHeader.substring(7);
 
 			if (jwtTokenUtil.validateAccessToken(jwtToken)) {
-				respons = transactionRepository.findAll();
+				transactionService.saveTransaction(transactionPenjualan);
 			}
 
 			return ResponseEntity.status(HttpStatus.OK).body(new ResponseModel(true, "Success", respons));
@@ -70,4 +76,5 @@ public class TransactionController {
 					.body(new ResponseModel(false, e.getMessage()));
 		}
 	}
+
 }
