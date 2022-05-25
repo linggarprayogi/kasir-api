@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.as.kasirapi.model.Mail;
 import com.as.kasirapi.model.member.Member;
@@ -20,18 +21,19 @@ import com.as.kasirapi.util.OTP;
 import com.google.gson.Gson;
 
 @Service
+@Transactional
 public class MemberService {
 
 	@Autowired
-	MemberRepository    memberRepository;
+	private MemberRepository    memberRepository;
 	@Autowired
-	MemberOTPRepository memberOTPRepository;
+	private MemberOTPRepository memberOTPRepository;
 	@Autowired
-	MailService         mailService;
+	private MailService         mailService;
 	@Autowired
-	JwtTokenUtil        jwtTokenUtil;
+	private JwtTokenUtil        jwtTokenUtil;
 
-	Gson                gson = new Gson();
+	Gson                        gson = new Gson();
 
 	public List<Member> listAll() {
 		return memberRepository.findAll();
