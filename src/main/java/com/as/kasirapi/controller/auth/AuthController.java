@@ -6,6 +6,8 @@ import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +38,8 @@ import io.jsonwebtoken.SignatureException;
 @CrossOrigin
 @RequestMapping("/auth")
 public class AuthController {
+	private static final Logger   LOG = LoggerFactory.getLogger(AuthController.class);
+
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
@@ -51,13 +55,14 @@ public class AuthController {
 	@RequestMapping(value = "/token", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
 		try {
+			LOG.info("Start : auth token");
 			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());
 
 			final UserDetails userDetails = jwtInMemoryUserDetailsService
 					.loadUserByUsername(authenticationRequest.getUsername());
 
 			final String      token       = jwtTokenUtil.generateToken(userDetails);
-
+			LOG.info("Finish : auth token");
 			return ResponseEntity.status(HttpStatus.OK)
 					.body(new ResponseModel(true, "Success", new JwtResponse(token)));
 		} catch (Exception e) {
