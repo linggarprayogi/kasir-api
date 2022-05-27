@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.as.kasirapi.model.ResponseModel;
@@ -57,7 +58,7 @@ public class TransactionController {
 
 	@PostMapping("/process")
 	public ResponseEntity<?> processTransaction(HttpServletRequest request,
-			List<TransactionPenjualan> transactionPenjualan) {
+			@RequestBody List<TransactionPenjualan> transactionPenjualan) {
 		try {
 			List<TransactionPenjualan> respons            = new ArrayList<TransactionPenjualan>();
 			final String               requestTokenHeader = request.getHeader("Authorization");
